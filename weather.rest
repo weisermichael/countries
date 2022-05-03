@@ -1,0 +1,2 @@
+//GET https://www.metaweather.com/api/location/28743736/
+GET https://api.weatherbit.io/v2.0/current?key=5f91eec673494107abe6678cb6fa52fe&city=new delhi

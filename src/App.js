@@ -3,12 +3,13 @@ import axios from 'axios'
 require('dotenv').config()
 
 const Weather = ({weatherData}) => {
-  const imgSrc = weatherData.current.weather_icons[0]
+  const imgSrc = process.env.PUBLIC_URL + "/icons/" + weatherData.weather.icon + ".png"
+  console.log(imgSrc)
   return (
     <>
-      <b>temperature: </b>{weatherData.current.temperature} Celcius <br/>
-      <img src={imgSrc}/> <br/>
-      <b>wind: </b> {weatherData.current.wind_speed} mph direction {weatherData.current.wind_dir} <br/>
+      <b>temperature: </b>{weatherData.temp} Celcius <br/>
+      <img src={imgSrc} alt="weather icon"/> <br/>
+      <b>wind: </b> {weatherData.wind_spd} mph direction {weatherData.wind_cdir} <br/>
     </>
   )
 }
@@ -17,10 +18,10 @@ const CountryInfo = ({i, countries, disp}) => {
   const [weatherData, setWeatherData] = useState(null)
   const api_key = process.env.REACT_APP_API_KEY
   //console.log(process.env.REACT_APP_API_KEY);
-  const urlStr = "api.weatherstack.com/" + "current?access_key=" + api_key + "&query=" + countries[i].capital
+  const urlStr = "https://api.weatherbit.io/v2.0/current?key=" + api_key + "&city=" + countries[i].capital
   useEffect(() =>{
     console.log("effect")
-    axios.get(urlStr).then((response) => {setWeatherData(response.data)})
+    axios.get(urlStr).then((response) => {setWeatherData(response.data.data[0])})
   }, [])
 
   if (disp) {
