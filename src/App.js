@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
+import {DisplayDiv} from './styledComponents/styles'
 require('dotenv').config()
 
 const Weather = ({weatherData}) => {
@@ -21,7 +22,10 @@ const CountryInfo = ({i, countries, disp}) => {
   const urlStr = "https://api.weatherbit.io/v2.0/current?key=" + api_key + "&city=" + countries[i].capital
   useEffect(() =>{
     console.log("effect")
-    axios.get(urlStr).then((response) => {setWeatherData(response.data.data[0])})
+    axios.get(urlStr).then((response) => {try {setWeatherData(response.data.data[0])}
+                                            catch(error){
+                                              console.log(error)
+                                            }})
   }, [])
 
   if (disp) {
@@ -39,6 +43,7 @@ const CountryInfo = ({i, countries, disp}) => {
         <br/>
         <h2>Weather in {countries[i].capital}</h2>
         {weatherData && <Weather weatherData={weatherData} /> }
+        {!weatherData && <p>Weather data is not avaliable for this location right now.</p>}
       </>
     )
   }
@@ -51,64 +56,63 @@ const CountryInfo = ({i, countries, disp}) => {
 
 const Display = ( {countries, search, namesSearched, commonNames, handleChange, handleClick, displayCountry} ) => {
 
-/*   const getWeather = (ind) => {
-    let weather = ""
-    const urlStr = "current?access_key=" + process.env.REACT_APP_API_KEY + "&query=" + countries[ind].capital
-    useEffect(() =>
-    axios.get("http://api.weatherstack.com/" + urlStr)
-         .then(response => weather=response.data))
-    return weather
-  }
- */
   if (search.length === 0) {
     return (
-      <div>
-        find countries <input value={search} onChange={handleChange}></input>
-        <br/>
-        specify a filter
-      </div>
+      <DisplayDiv>
+        <div>
+          find countries <input value={search} onChange={handleChange}></input>
+          <br/>
+          specify a filter
+        </div>
+      </DisplayDiv>
     );
   }
 
   else if (namesSearched.length > 10) {
     return (
-      <div>
-        find countries <input value={search} onChange={handleChange}></input>
-        <br/>
-        Too many matches, specify another filter
-      </div>
+      <DisplayDiv>
+        <div>
+          find countries <input value={search} onChange={handleChange}></input>
+          <br/>
+          Too many matches, specify another filter
+        </div>
+      </DisplayDiv>
     );
   }
 
   else if (namesSearched.length === 1){
     const i = commonNames.indexOf(namesSearched[0])
     return (
-      <div>
-        find countries <input value={search} onChange={handleChange}></input>
-        <CountryInfo i={i} countries={countries} disp={true}/>
-      </div>
+      <DisplayDiv>
+        <div>
+          find countries <input value={search} onChange={handleChange}></input>
+          <CountryInfo i={i} countries={countries} disp={true}/>
+        </div>
+      </DisplayDiv>
     )
   }
 
   return (
-    <div>
-      find countries <input value={search} onChange={handleChange}></input>
-      <ul>
-        {namesSearched.map(n => <>
-                                  <li ind={commonNames.indexOf(n)} 
-                                      key={commonNames.indexOf(n)}> {n} 
-                                    <button key={commonNames.indexOf(n)}
-                                            onClick={handleClick}>show</button>
-                                    
-                                  </li>
-                                  <CountryInfo key={1+commonNames.indexOf(n)} 
-                                               i={commonNames.indexOf(n)} 
-                                               countries={countries} 
-                                               disp={displayCountry[commonNames.indexOf(n)]}/>
-                                </>)}
-        
-      </ul>
-    </div>
+    <DisplayDiv>
+      <div>
+        find countries <input value={search} onChange={handleChange}></input>
+        <ul>
+          {namesSearched.map(n => <>
+                                    <li ind={commonNames.indexOf(n)} 
+                                        key={commonNames.indexOf(n)}> {n} 
+                                      <button key={commonNames.indexOf(n)}
+                                              onClick={handleClick}>show</button>
+                                      
+                                    </li>
+                                    <CountryInfo key={1+commonNames.indexOf(n)} 
+                                                i={commonNames.indexOf(n)} 
+                                                countries={countries} 
+                                                disp={displayCountry[commonNames.indexOf(n)]}/>
+                                  </>)}
+          
+        </ul>
+      </div>
+    </DisplayDiv>
   );
 }
 
