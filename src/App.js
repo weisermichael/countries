@@ -1,17 +1,19 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
-import {DisplayDiv} from './styledComponents/styles'
+import {DisplayDiv, WeatherDiv, TempContainer, WindContainer, PicContainer} from './styledComponents/styles'
 require('dotenv').config()
 
 const Weather = ({weatherData}) => {
   const imgSrc = process.env.PUBLIC_URL + "/icons/" + weatherData.weather.icon + ".png"
   console.log(imgSrc)
   return (
-    <>
-      <b>temperature: </b>{weatherData.temp} Celcius <br/>
-      <img src={imgSrc} alt="weather icon"/> <br/>
-      <b>wind: </b> {weatherData.wind_spd} mph direction {weatherData.wind_cdir} <br/>
-    </>
+    <WeatherDiv>
+      <>
+        <TempContainer><div><b>temperature: </b>{weatherData.temp} Celcius <br/></div></TempContainer>
+        <PicContainer><div><img src={imgSrc} alt="weather icon" style={{"border": "1px solid #4A6E82", margin: "10px"}}/> <br/></div></PicContainer>
+        <WindContainer><div><b>wind: </b> {weatherData.wind_spd} mph direction {weatherData.wind_cdir} <br/></div></WindContainer>
+      </>
+    </WeatherDiv>
   )
 }
 
@@ -30,21 +32,23 @@ const CountryInfo = ({i, countries, disp}) => {
 
   if (disp) {
     return (
-      <>
-        <h1>{countries[i].name.common}</h1>
-        <br/>
-        capital: {countries[i].capital} <br/>
-        population: {countries[i].population} <br/>
-        <h2>languages</h2>
-        <ul>
-          {Object.values(countries[i].languages).map((l, a) => <li key={a}>{l}</li>)}
-        </ul>
-        <img src={countries[i].flags.png} alt="flag" />
-        <br/>
-        <h2>Weather in {countries[i].capital}</h2>
-        {weatherData && <Weather weatherData={weatherData} /> }
-        {!weatherData && <p>Weather data is not avaliable for this location right now.</p>}
-      </>
+      <DisplayDiv>
+        <div>
+          <h1>{countries[i].name.common}</h1>
+          <br/>
+          capital: {countries[i].capital} <br/>
+          population: {countries[i].population} <br/>
+          <h2>languages</h2>
+          <ul>
+            {Object.values(countries[i].languages).map((l, a) => <li key={a}>{l}</li>)}
+          </ul>
+          <img src={countries[i].flags.png} alt="flag" />
+          <br/>
+          <h2>Weather in {countries[i].capital}</h2>
+          {weatherData && <Weather weatherData={weatherData} /> }
+          {!weatherData && <p>Weather data is not avaliable for this location right now.</p>}
+        </div>
+      </DisplayDiv>
     )
   }
   else{
