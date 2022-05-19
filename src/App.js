@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import {DisplayDiv, WeatherDiv, TempContainer, WindContainer, PicContainer} from './styledComponents/styles'
+import './index.css';
 require('dotenv').config()
 
 const Weather = ({weatherData}) => {
@@ -10,7 +11,7 @@ const Weather = ({weatherData}) => {
     <WeatherDiv>
       <>
         <TempContainer><div><b>temperature: </b>{weatherData.temp} Celcius <br/></div></TempContainer>
-        <PicContainer><div><img src={imgSrc} alt="weather icon" style={{"border": "1px solid #4A6E82", margin: "10px"}}/> <br/></div></PicContainer>
+        <PicContainer><div><img src={imgSrc} alt="weather icon" style={{margin: "10px"}}/> <br/></div></PicContainer>
         <WindContainer><div><b>wind: </b> {weatherData.wind_spd} mph direction {weatherData.wind_cdir} <br/></div></WindContainer>
       </>
     </WeatherDiv>
@@ -20,7 +21,6 @@ const Weather = ({weatherData}) => {
 const CountryInfo = ({i, countries, disp}) => {
   const [weatherData, setWeatherData] = useState(null)
   const api_key = process.env.REACT_APP_API_KEY
-  //console.log(process.env.REACT_APP_API_KEY);
   const urlStr = "https://api.weatherbit.io/v2.0/current?key=" + api_key + "&city=" + countries[i].capital
   useEffect(() =>{
     console.log("effect")
@@ -35,15 +35,15 @@ const CountryInfo = ({i, countries, disp}) => {
       <DisplayDiv>
         <div>
           <h1>{countries[i].name.common}</h1>
+          
+          <p><span>capital:</span> {countries[i].capital}</p> 
           <br/>
-          capital: {countries[i].capital} <br/>
-          population: {countries[i].population} <br/>
+          <p><span>population:</span> {countries[i].population}</p> 
           <h2>languages</h2>
-          <ul>
+          <ul class="langs">
             {Object.values(countries[i].languages).map((l, a) => <li key={a}>{l}</li>)}
           </ul>
-          <img src={countries[i].flags.png} alt="flag" />
-          <br/>
+          <img class="flag" src={countries[i].flags.png} alt="flag" />
           <h2>Weather in {countries[i].capital}</h2>
           {weatherData && <Weather weatherData={weatherData} /> }
           {!weatherData && <p>Weather data is not avaliable for this location right now.</p>}
